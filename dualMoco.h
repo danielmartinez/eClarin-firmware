@@ -53,29 +53,34 @@
 		#include <avr/power.h>
 
 		#include "Descriptors.h"
-
+		
 		#include "Lib/LightweightRingBuff.h"
 
-		#include <LUFA/Version.h>
 		#include <LUFA/Drivers/Board/LEDs.h>
 		#include <LUFA/Drivers/Peripheral/Serial.h>
+		//#include <LUFA/Drivers/Misc/RingBuffer.h>
 		#include <LUFA/Drivers/USB/USB.h>
-		#include <LUFA/Drivers/USB/Class/CDC.h>
-		
+		#include <LUFA/Platform/Platform.h>
+
 	/* Macros: */
-		/** LED mask for the library LED driver, to indicate TX activity. */
+	  /** LED mask for the library LED driver, to indicate TX activity. */
 		#define LEDMASK_TX               LEDS_LED1
 
 		/** LED mask for the library LED driver, to indicate RX activity. */
 		#define LEDMASK_RX               LEDS_LED2
 		
+		/** LED mask for the library LED driver, to indicate that the USB interface is not ready. */
+		#define LEDMASK_USB_NOTREADY      LEDS_LED1
+
+		/** LED mask for the library LED driver, to indicate that the USB interface is enumerating. */
+		#define LEDMASK_USB_ENUMERATING  (LEDS_LED2 | LEDS_LED3)
+
+		/** LED mask for the library LED driver, to indicate that the USB interface is ready. */
+		#define LEDMASK_USB_READY        (LEDS_LED2 | LEDS_LED4)
+
 		/** LED mask for the library LED driver, to indicate that an error has occurred in the USB interface. */
-		#define LEDMASK_ERROR            (LEDS_LED1 | LEDS_LED2)
-		
-		/** LED mask for the library LED driver, to indicate that the USB interface is busy. */
-		#define LEDMASK_BUSY             (LEDS_LED1 | LEDS_LED2)		
-		
-		typedef uint8_t uchar;
+		#define LEDMASK_USB_ERROR        (LEDS_LED1 | LEDS_LED3)
+
 		#define HW_CDC_BULK_OUT_SIZE     8
 		#define HW_CDC_BULK_IN_SIZE      8
 
@@ -90,14 +95,14 @@
 		void EVENT_USB_Device_Connect(void);
 		void EVENT_USB_Device_Disconnect(void);
 		void EVENT_USB_Device_ConfigurationChanged(void);
-		void EVENT_USB_Device_UnhandledControlRequest(void);
-		
-		void EVENT_CDC_Device_LineEncodingChanged(USB_ClassInfo_CDC_Device_t* const CDCInterfaceInfo);
-		void EVENT_CDC_Device_ControLineStateChanged(USB_ClassInfo_CDC_Device_t* const CDCInterfaceInfo);		
+		void EVENT_USB_Device_ControlRequest(void);
 
-		uchar parseSerialMidiMessage(uchar);
-		void parseUSBMidiMessage(uchar *, uchar);
+		void EVENT_CDC_Device_LineEncodingChanged(USB_ClassInfo_CDC_Device_t* const CDCInterfaceInfo);
+		void EVENT_CDC_Device_ControLineStateChanged(USB_ClassInfo_CDC_Device_t* const CDCInterfaceInfo);
+
+		uint8_t parseSerialMidiMessage(uint8_t);
+		void parseUSBMidiMessage(uint8_t *, uint8_t);
 	/* shared variable */
-		extern uchar mocoMode;
+		extern uint8_t mocoMode;
 
 #endif /* _DUAL_MOCO_H_ */
