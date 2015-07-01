@@ -452,11 +452,11 @@ const USB_Descriptor_String_t PROGMEM ProductStringSerial =
 	
 };
 /* for MIDI */
-USB_Descriptor_String_t PROGMEM ProductStringMIDI =
+const USB_Descriptor_String_t PROGMEM ProductStringMIDI =
 {
-	.Header                 = {.Size = USB_STRING_LEN(8), .Type = DTYPE_String},
+	.Header                 = {.Size = USB_STRING_LEN(20), .Type = DTYPE_String},
 
-	.UnicodeString          = L"MocoLUFA"
+	.UnicodeString          = L"eClarin MIDI Bagpipe"
 };
 
 /** This function is called by the library when in device mode, and must be overridden (see library "USB Descriptors"
